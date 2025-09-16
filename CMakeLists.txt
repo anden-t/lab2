@@ -1,0 +1,8 @@
+project(lab2)
+cmake_minimum_required(VERSION 3.12)
+add_executable(lab2 main.cpp)
+message(STATUS "EasyGL: UNIX detected, looking for X11 and font libraries")
+find_package(X11 COMPONENTS X11 Xft)
+target_link_libraries(lab2 X11)
+find_package(JPEG REQUIRED)
+target_link_libraries(${PROJECT_NAME} JPEG::JPEG)
