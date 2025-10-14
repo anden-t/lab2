@@ -38,7 +38,7 @@ void circle(CImg<unsigned char>& image, int xc, int yc, int r, const unsigned ch
 }
 
 double fun(double x) {
-    return abs(cbrt(x)); // тоже самое что и х в степени 1/3
+    return abs(sqrt(x)); // тоже самое что и х в степени 1/2
 }
 
 int main() {
@@ -49,18 +49,18 @@ int main() {
     original_image.load("../test_images/2.jpeg");
 
     int radius = original_image.height() / 8;
-    int yc = original_image.height() / 2 + radius;
-    int xc = original_image.width() / 2;
-    int x1 = original_image.width() / 2 - radius;
-    int y1 = original_image.height() / 2;
-    int x2 = original_image.width() / 2 + radius;
-    int y2 = original_image.height() / 2 + 2 * radius;
+    int yc = original_image.height() - radius;
+    int xc = original_image.width() / 2 + radius;
+    int x1 = xc - radius;
+    int y1 = yc - radius;
+    int x2 = xc + radius;
+    int y2 = yc + radius;
 
-    int target_x, target_y;
-    cout << "Введите координату x для вставки фрагмента: ";
-    cin >> target_x;
-    cout << "Введите координату y для вставки фрагмента: ";
-    cin >> target_y;
+    int target_x = 0, target_y = image.height() - 2 * radius;
+    // cout << "Введите координату x для вставки фрагмента: ";
+    // cin >> target_x;
+    // cout << "Введите координату y для вставки фрагмента: ";
+    // cin >> target_y;
    
     image.fill(255, 255, 255);
 
