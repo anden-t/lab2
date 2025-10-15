@@ -109,8 +109,8 @@ int main() {
     }
     
 
-    original_image.save_pnm("original.pnm");
-    image.save_pnm("output.pnm");
+    original_image.save_pnm_p3("original.ppm");
+    image.save_pnm_p3("output.ppm");
     original_image.display("original");
     image.display("lab2");
     return 0;    

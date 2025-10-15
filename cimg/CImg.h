@@ -62295,6 +62295,10 @@ namespace cimg_library {
       return _save_pnm(0,filename,bytes_per_pixel);
     }
 
+    const CImg<T>& save_pnm_p3(const char *const filename, const unsigned int bytes_per_pixel=1) const {
+      return _save_pnm_p3(0,filename,bytes_per_pixel);
+    }
+
     //! Save image as a PNM file \overloading.
     const CImg<T>& save_pnm(std::FILE *const file, const unsigned int bytes_per_pixel=0) const {
       return _save_pnm(file,0,bytes_per_pixel);
@@ -62415,6 +62419,48 @@ namespace cimg_library {
             if (!cimg::endianness()) cimg::invert_endianness(buf._data,buf_size);
             cimg::fwrite(buf._data,3*N,nfile);
             to_write-=N;
+          }
+        }
+      }
+      }
+      if (!file) cimg::fclose(nfile);
+      return *this;
+    }
+
+    const CImg<T>& _save_pnm_p3(std::FILE *const file, const char *const filename,
+                             const unsigned int bytes_per_pixel) const {
+      if (!file && !filename)
+        throw CImgArgumentException(_cimg_instance
+                                    "save_pnm_p3(): Specified filename is (null).",
+                                    cimg_instance);
+      if (is_empty()) { cimg::fempty(file,filename); return *this; }
+
+      if (_spectrum != 3 || bytes_per_pixel != 1)
+        cimg::warn(_cimg_instance
+                   "save_pnm_p3(): Can save only in p3.",
+                   cimg_instance,
+                   filename?filename:"(FILE*)");
+
+      std::FILE *const nfile = file?file:cimg::fopen(filename,"wb");
+      const T
+        *ptr_r = data(0,0,0,0),
+        *ptr_g = data(0,0,0,1),
+        *ptr_b = data(0,0,0,2);
+      //const ulongT buf_size = std::min((ulongT)(1024*1024),(ulongT)(_width*_height*3UL)));
+
+      std::fprintf(nfile,"P3\n%u %u\n%u\n", _width,_height,255);
+
+      switch (_spectrum) {
+      default : { // RGB image
+        if (bytes_per_pixel==1) { // Binary PPM 8 bits
+          for (longT to_write = (longT)width()*height(); to_write>0; to_write--) {
+            int n;
+            if(to_write == 1)
+              n = std::fprintf(nfile, "%u %u %u", (unsigned int)(unsigned char)*(ptr_r++), (unsigned int)(unsigned char)*(ptr_g++), (unsigned int)(unsigned char)*(ptr_b++));
+            else
+              n = std::fprintf(nfile, "%u %u %u ", (unsigned int)(unsigned char)*(ptr_r++), (unsigned int)(unsigned char)*(ptr_g++), (unsigned int)(unsigned char)*(ptr_b++));
+
+            //cimg::fwrite((T*)buf, n, nfile);
           }
         }
       }
